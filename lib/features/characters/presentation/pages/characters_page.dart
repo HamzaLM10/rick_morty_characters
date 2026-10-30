@@ -9,6 +9,8 @@ import 'package:rick_morty_characters/features/characters/presentation/bloc/char
 import 'package:rick_morty_characters/features/characters/presentation/bloc/characters_state.dart';
 import 'package:rick_morty_characters/features/characters/presentation/widgets/character_card.dart';
 import 'package:rick_morty_characters/features/characters/presentation/widgets/characters_app_bar.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rick_morty_characters/core/router/app_routes.dart';
 
 /// Provides the Bloc. The drawing is done by [_CharactersView].
 class CharactersPage extends StatelessWidget {
@@ -17,8 +19,9 @@ class CharactersPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CharactersBloc(context.read<CharactersRepository>())
-        ..add(const CharactersStarted()),
+      create: (context) =>
+          CharactersBloc(context.read<CharactersRepository>())
+            ..add(const CharactersStarted()),
       child: const _CharactersView(),
     );
   }
@@ -36,8 +39,7 @@ class _CharactersView extends StatelessWidget {
       ),
       body: BlocBuilder<CharactersBloc, CharactersState>(
         builder: (context, state) => switch (state) {
-          CharactersInitial() ||
-          CharactersLoading() => const Center(
+          CharactersInitial() || CharactersLoading() => const Center(
             child: CircularProgressIndicator(),
           ),
           CharactersLoaded(:final characters) => _CharactersGrid(
@@ -77,8 +79,10 @@ class _CharactersGrid extends StatelessWidget {
       itemBuilder: (context, index) {
         return CharacterCard(
           character: characters[index],
-          // Navigation to the details page is added in step 7.
-          onTap: () {},
+        
+          onTap: () => context.push(
+            AppRoutes.characterDetailsPath(characters[index].id),
+          ),
         );
       },
     );

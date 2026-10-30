@@ -38,6 +38,7 @@ dependencies:
   dio: ^5.11.1
   flutter_bloc: ^9.1.1
   stream_transform: ^2.1.2
+  go_router: ^18.1.2
 
 dev_dependencies:
   flutter_test:
