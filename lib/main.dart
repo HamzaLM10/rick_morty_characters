@@ -1,30 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:rick_morty_characters/core/error/app_exception.dart';
 import 'package:rick_morty_characters/core/network/dio_client.dart';
 import 'package:rick_morty_characters/core/theme/app_theme.dart';
 import 'package:rick_morty_characters/features/characters/data/datasources/characters_remote_data_source.dart';
 import 'package:rick_morty_characters/features/characters/data/repositories/characters_repository_impl.dart';
+import 'package:rick_morty_characters/features/characters/presentation/bloc/characters_bloc.dart';
+import 'package:rick_morty_characters/features/characters/presentation/bloc/characters_event.dart';
+import 'package:rick_morty_characters/features/characters/presentation/bloc/characters_state.dart';
+
+String _describe(CharactersState state) => switch (state) {
+  CharactersInitial() => 'Initial',
+  CharactersLoading() => 'Loading',
+  CharactersLoaded(:final characters, :final query) =>
+    'Loaded(${characters.length}, "$query")',
+  CharactersEmpty(:final query) => 'Empty("$query")',
+  CharactersError(:final exception) => 'Error(${exception.runtimeType})',
+};
 
 Future<void> main() async {
-  final repository = CharactersRepositoryImpl(
-    CharactersRemoteDataSource(createDio()),
+  final bloc = CharactersBloc(
+    CharactersRepositoryImpl(CharactersRemoteDataSource(createDio())),
   );
+  bloc.stream.listen((state) => debugPrint('STATE: ${_describe(state)}'));
 
-  try {
-    final all = await repository.getCharacters();
-    debugPrint('TEST list: ${all.length} items, first = ${all.first}');
+  const pause = Duration(seconds: 3);
 
-    final none = await repository.getCharacters(name: 'zzzzzzqq');
-    debugPrint('TEST search no match: ${none.length} items');
+  debugPrint('--- start');
+  bloc.add(const CharactersStarted());
+  await Future<void>.delayed(pause);
 
-    final one = await repository.getCharacterById(1);
-    debugPrint('TEST details: ${one.name}, origin = ${one.origin}');
+  debugPrint('--- fast typing r, ri, rick');
+  bloc.add(const SearchQueryChanged('r'));
+  bloc.add(const SearchQueryChanged('ri'));
+  bloc.add(const SearchQueryChanged('rick'));
+  await Future<void>.delayed(pause);
 
-    await repository.getCharacterById(99999);
-  } on AppException catch (e) {
-    debugPrint('TEST caught: ${e.runtimeType} -> ${e.message}');
-  }
+  debugPrint('--- no match');
+  bloc.add(const SearchQueryChanged('zzzzzzqq'));
+  await Future<void>.delayed(pause);
 
+  debugPrint('--- cleared');
+  bloc.add(const SearchQueryChanged(''));
+  await Future<void>.delayed(pause);
+
+  await bloc.close();
   runApp(const CharactersApp());
 }
 
