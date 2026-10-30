@@ -8,6 +8,7 @@ import 'package:rick_morty_characters/features/characters/presentation/bloc/char
 import 'package:rick_morty_characters/features/characters/presentation/bloc/characters_event.dart';
 import 'package:rick_morty_characters/features/characters/presentation/bloc/characters_state.dart';
 import 'package:rick_morty_characters/features/characters/presentation/widgets/character_card.dart';
+import 'package:rick_morty_characters/features/characters/presentation/widgets/characters_app_bar.dart';
 
 /// Provides the Bloc. The drawing is done by [_CharactersView].
 class CharactersPage extends StatelessWidget {
@@ -29,12 +30,9 @@ class _CharactersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Characters'),
-        actions: [
-          // The search field is added in step 6.
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-        ],
+      appBar: CharactersAppBar(
+        onQueryChanged: (query) =>
+            context.read<CharactersBloc>().add(SearchQueryChanged(query)),
       ),
       body: BlocBuilder<CharactersBloc, CharactersState>(
         builder: (context, state) => switch (state) {
@@ -68,6 +66,7 @@ class _CharactersGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       padding: const EdgeInsets.all(12),
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 12,
