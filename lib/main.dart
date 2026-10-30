@@ -17,9 +17,8 @@ class CharactersApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider<CharactersRepository>(
-      create: (_) => CharactersRepositoryImpl(
-        CharactersRemoteDataSource(createDio()),
-      ),
+      create: (_) =>
+          CharactersRepositoryImpl(CharactersRemoteDataSource(createDio())),
       child: MaterialApp.router(
         title: 'Characters',
         debugShowCheckedModeBanner: false,

@@ -18,13 +18,54 @@ final class CharactersLoading extends CharactersState {
 }
 
 final class CharactersLoaded extends CharactersState {
-  const CharactersLoaded(this.characters, this.query);
+  const CharactersLoaded({
+    required this.characters,
+    required this.query,
+    required this.page,
+    required this.hasNextPage,
+    this.isLoadingMore = false,
+    this.loadMoreFailed = false,
+  });
 
   final List<Character> characters;
   final String query;
 
+  /// The last page that was loaded (starts at 1).
+  final int page;
+  final bool hasNextPage;
+
+  /// A next page is being fetched (the list stays on screen).
+  final bool isLoadingMore;
+
+  /// Fetching the next page failed (the list stays on screen).
+  final bool loadMoreFailed;
+
+  CharactersLoaded copyWith({
+    List<Character>? characters,
+    int? page,
+    bool? hasNextPage,
+    bool? isLoadingMore,
+    bool? loadMoreFailed,
+  }) {
+    return CharactersLoaded(
+      characters: characters ?? this.characters,
+      query: query,
+      page: page ?? this.page,
+      hasNextPage: hasNextPage ?? this.hasNextPage,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      loadMoreFailed: loadMoreFailed ?? this.loadMoreFailed,
+    );
+  }
+
   @override
-  List<Object?> get props => [characters, query];
+  List<Object?> get props => [
+    characters,
+    query,
+    page,
+    hasNextPage,
+    isLoadingMore,
+    loadMoreFailed,
+  ];
 }
 
 /// A search that matched nothing. Not an error.

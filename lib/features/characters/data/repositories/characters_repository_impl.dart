@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:rick_morty_characters/core/error/app_exception.dart';
 import 'package:rick_morty_characters/features/characters/data/datasources/characters_remote_data_source.dart';
 import 'package:rick_morty_characters/features/characters/domain/entities/character.dart';
+import 'package:rick_morty_characters/features/characters/domain/entities/paged_characters.dart';
 import 'package:rick_morty_characters/features/characters/domain/repositories/characters_repository.dart';
 
 class CharactersRepositoryImpl implements CharactersRepository {
@@ -12,13 +13,15 @@ class CharactersRepositoryImpl implements CharactersRepository {
   final CharactersRemoteDataSource _remote;
 
   @override
-  Future<List<Character>> getCharacters({String? name}) async {
+  Future<PagedCharacters> getCharacters({String? name, int page = 1}) async {
     try {
-      final models = await _remote.getCharacters(name: name);
-      return models.map((model) => model.toEntity()).toList();
+      final model = await _remote.getCharacters(name: name, page: page);
+      return model.toEntity();
     } on DioException catch (e) {
       // The API answers 404 when a search matches nothing: not an error.
-      if (e.response?.statusCode == 404) return const [];
+      if (e.response?.statusCode == 404) {
+        return const PagedCharacters(characters: [], hasNextPage: false);
+      }
       throw _mapDioException(e);
     } on TypeError {
       // Unexpected JSON shape.
@@ -56,4 +59,4 @@ class CharactersRepositoryImpl implements CharactersRepository {
     if (statusCode != null && statusCode >= 500) return const ServerException();
     return const UnknownException();
   }
-} 
+}

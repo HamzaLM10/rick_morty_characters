@@ -26,3 +26,8 @@ final class SearchQueryChanged extends CharactersEvent {
   @override
   List<Object?> get props => [query];
 }
+
+/// The user scrolled near the end of the list: load the next page.
+final class NextPageRequested extends CharactersEvent {
+  const NextPageRequested();
+}

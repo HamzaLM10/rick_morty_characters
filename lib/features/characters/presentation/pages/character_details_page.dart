@@ -51,10 +51,8 @@ class _CharacterDetailsView extends StatelessWidget {
       ),
       body: BlocBuilder<CharacterDetailsCubit, CharacterDetailsState>(
         builder: (context, state) => switch (state) {
-          CharacterDetailsInitial() ||
-          CharacterDetailsLoading() => const Center(
-            child: CircularProgressIndicator(),
-          ),
+          CharacterDetailsInitial() || CharacterDetailsLoading() =>
+            const Center(child: CircularProgressIndicator()),
           CharacterDetailsLoaded(:final character) => _DetailsContent(
             character: character,
           ),

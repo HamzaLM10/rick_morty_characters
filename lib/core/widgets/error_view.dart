@@ -3,11 +3,7 @@ import 'package:rick_morty_characters/core/error/app_exception.dart';
 
 /// Shared error screen: icon + message + Retry.
 class ErrorView extends StatelessWidget {
-  const ErrorView({
-    super.key,
-    required this.exception,
-    required this.onRetry,
-  });
+  const ErrorView({super.key, required this.exception, required this.onRetry});
 
   final AppException exception;
   final VoidCallback onRetry;

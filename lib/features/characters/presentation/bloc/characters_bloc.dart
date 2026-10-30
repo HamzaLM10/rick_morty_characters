@@ -21,6 +21,7 @@ class CharactersBloc extends Bloc<CharactersEvent, CharactersState> {
       (event, emit) => _load(event.query.trim(), emit),
       transformer: _debounceRestartable(_searchDebounce),
     );
+    on<NextPageRequested>(_onNextPageRequested);
   }
 
   final CharactersRepository _repository;
@@ -36,17 +37,59 @@ class CharactersBloc extends Bloc<CharactersEvent, CharactersState> {
     return _load(query, emit);
   }
 
+  /// Loads page 1 of [query], replacing whatever is on screen.
   Future<void> _load(String query, Emitter<CharactersState> emit) async {
     emit(const CharactersLoading());
     try {
-      final characters = await _repository.getCharacters(name: query);
+      final result = await _repository.getCharacters(name: query);
       emit(
-        characters.isEmpty
+        result.characters.isEmpty
             ? CharactersEmpty(query)
-            : CharactersLoaded(characters, query),
+            : CharactersLoaded(
+                characters: result.characters,
+                query: query,
+                page: 1,
+                hasNextPage: result.hasNextPage,
+              ),
       );
     } on AppException catch (e) {
       emit(CharactersError(e, query));
+    }
+  }
+
+  /// Appends the next page to the list that is already on screen.
+  Future<void> _onNextPageRequested(
+    NextPageRequested event,
+    Emitter<CharactersState> emit,
+  ) async {
+    final current = state;
+    if (current is! CharactersLoaded ||
+        !current.hasNextPage ||
+        current.isLoadingMore) {
+      return;
+    }
+
+    emit(current.copyWith(isLoadingMore: true, loadMoreFailed: false));
+    try {
+      final result = await _repository.getCharacters(
+        name: current.query,
+        page: current.page + 1,
+      );
+      final latest = state;
+      // The user started another search meanwhile: drop this old result.
+      if (latest is! CharactersLoaded || latest.query != current.query) return;
+      emit(
+        latest.copyWith(
+          characters: [...latest.characters, ...result.characters],
+          page: latest.page + 1,
+          hasNextPage: result.hasNextPage,
+          isLoadingMore: false,
+        ),
+      );
+    } on AppException {
+      final latest = state;
+      if (latest is! CharactersLoaded || latest.query != current.query) return;
+      emit(latest.copyWith(isLoadingMore: false, loadMoreFailed: true));
     }
   }
 }
