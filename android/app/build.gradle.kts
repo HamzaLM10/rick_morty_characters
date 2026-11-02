@@ -8,7 +8,16 @@ android {
     namespace = "com.hamza.rick_morty_characters"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
-
+    flavorDimensions += "env"
+    productFlavors {
+        create("dev") {
+            dimension = "env"
+            applicationIdSuffix = ".dev"   // يتيح تثبيت dev وprod معاً
+        }
+        create("prod") {
+            dimension = "env"
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

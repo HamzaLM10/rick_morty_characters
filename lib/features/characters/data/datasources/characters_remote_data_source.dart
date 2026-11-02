@@ -1,13 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:rick_morty_characters/features/characters/data/models/character_model.dart';
-import 'package:rick_morty_characters/features/characters/data/models/paged_characters_model.dart';
 
+/// Talks to the API and returns the raw JSON. It knows nothing about models.
 class CharactersRemoteDataSource {
   const CharactersRemoteDataSource(this._dio);
 
   final Dio _dio;
 
-  Future<PagedCharactersModel> getCharacters({
+  Future<Map<String, dynamic>> getCharacters({
     String? name,
     int page = 1,
   }) async {
@@ -18,11 +17,11 @@ class CharactersRemoteDataSource {
         if (name != null && name.isNotEmpty) 'name': name,
       },
     );
-    return PagedCharactersModel.fromJson(response.data!);
+    return response.data!;
   }
 
-  Future<CharacterModel> getCharacterById(int id) async {
+  Future<Map<String, dynamic>> getCharacterById(int id) async {
     final response = await _dio.get<Map<String, dynamic>>('/character/$id');
-    return CharacterModel.fromJson(response.data!);
+    return response.data!;
   }
 }
