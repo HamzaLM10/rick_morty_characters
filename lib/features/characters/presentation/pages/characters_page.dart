@@ -4,31 +4,16 @@ import 'package:go_router/go_router.dart';
 import 'package:rick_morty_characters/core/router/app_routes.dart';
 import 'package:rick_morty_characters/core/widgets/empty_view.dart';
 import 'package:rick_morty_characters/core/widgets/error_view.dart';
-import 'package:rick_morty_characters/features/characters/domain/repositories/characters_repository.dart';
 import 'package:rick_morty_characters/features/characters/presentation/bloc/characters_bloc.dart';
 import 'package:rick_morty_characters/features/characters/presentation/bloc/characters_event.dart';
 import 'package:rick_morty_characters/features/characters/presentation/bloc/characters_state.dart';
 import 'package:rick_morty_characters/features/characters/presentation/widgets/character_card.dart';
 import 'package:rick_morty_characters/features/characters/presentation/widgets/characters_app_bar.dart';
 
-/// Provides the Bloc. The drawing is done by [_CharactersView].
+/// The home screen. Its Bloc is provided from outside (see app_router.dart).
 class CharactersPage extends StatelessWidget {
   const CharactersPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          CharactersBloc(context.read<CharactersRepository>())
-            ..add(const CharactersStarted()),
-      child: const _CharactersView(),
-    );
-  }
-}
-
-class _CharactersView extends StatelessWidget {
-  const _CharactersView();
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

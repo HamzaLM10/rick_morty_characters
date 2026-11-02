@@ -4,30 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:rick_morty_characters/core/theme/app_colors.dart';
 import 'package:rick_morty_characters/core/widgets/error_view.dart';
 import 'package:rick_morty_characters/features/characters/domain/entities/character.dart';
-import 'package:rick_morty_characters/features/characters/domain/repositories/characters_repository.dart';
 import 'package:rick_morty_characters/features/characters/presentation/cubit/character_details_cubit.dart';
 import 'package:rick_morty_characters/features/characters/presentation/cubit/character_details_state.dart';
 
-/// Provides the Cubit. The drawing is done by [_CharacterDetailsView].
+/// The details screen. Its Cubit is provided from outside (see app_router.dart).
 class CharacterDetailsPage extends StatelessWidget {
-  const CharacterDetailsPage({super.key, required this.characterId});
-
-  final int characterId;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CharacterDetailsCubit(
-        context.read<CharactersRepository>(),
-        characterId,
-      )..load(),
-      child: const _CharacterDetailsView(),
-    );
-  }
-}
-
-class _CharacterDetailsView extends StatelessWidget {
-  const _CharacterDetailsView();
+  const CharacterDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
