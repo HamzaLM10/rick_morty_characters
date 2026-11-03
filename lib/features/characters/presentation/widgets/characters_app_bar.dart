@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
 /// Normal title bar that turns into a search field when the search icon
-/// is pressed. It only reports text changes; it knows nothing about the Bloc.
+/// is pressed. It only reports user actions; it knows nothing about the
+/// Bloc or the auth layer.
 class CharactersAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const CharactersAppBar({super.key, required this.onQueryChanged});
+  const CharactersAppBar({
+    super.key,
+    required this.onQueryChanged,
+    this.onSignOut,
+  });
 
   final ValueChanged<String> onQueryChanged;
+  final VoidCallback? onSignOut;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -47,6 +53,12 @@ class _CharactersAppBarState extends State<CharactersAppBar> {
         title: const Text('Characters'),
         actions: [
           IconButton(onPressed: _startSearch, icon: const Icon(Icons.search)),
+          if (widget.onSignOut != null)
+            IconButton(
+              onPressed: widget.onSignOut,
+              tooltip: 'Sign out',
+              icon: const Icon(Icons.logout),
+            ),
         ],
       );
     }

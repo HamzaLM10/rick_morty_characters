@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "52663854623",
+    "project_id": "rick-morty-characters-7b817",
+    "storage_bucket": "rick-morty-characters-7b817.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52663854623:android:3b69834e82514fb76d172a",
+        "android_client_info": {
+          "package_name": "com.hamza.rick_morty_characters"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkB16Wj0-l8GLE7386_lh8BOQBZjSbzKQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52663854623:android:66b2376685149a366d172a",
+        "android_client_info": {
+          "package_name": "com.hamza.rick_morty_characters.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkB16Wj0-l8GLE7386_lh8BOQBZjSbzKQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

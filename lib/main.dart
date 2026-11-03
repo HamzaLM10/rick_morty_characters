@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rick_morty_characters/app/app_router.dart';
 import 'package:rick_morty_characters/app/injection.dart';
@@ -6,10 +7,12 @@ import 'package:rick_morty_characters/core/theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   final config = AppConfig.fromFlavor();
   await configureDependencies(config);
   runApp(CharactersApp(config: config));
 }
+
 class CharactersApp extends StatelessWidget {
   const CharactersApp({super.key, required this.config});
 

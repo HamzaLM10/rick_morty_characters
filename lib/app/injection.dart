@@ -1,7 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rick_morty_characters/core/config/app_config.dart';
 import 'package:rick_morty_characters/core/network/dio_client.dart';
+import 'package:rick_morty_characters/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:rick_morty_characters/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:rick_morty_characters/features/auth/domain/repositories/auth_repository.dart';
+import 'package:rick_morty_characters/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:rick_morty_characters/features/characters/data/datasources/characters_local_data_source.dart';
 import 'package:rick_morty_characters/features/characters/data/datasources/characters_remote_data_source.dart';
 import 'package:rick_morty_characters/features/characters/data/repositories/characters_repository_impl.dart';
@@ -41,4 +46,15 @@ Future<void> configureDependencies(AppConfig config) async {
   sl.registerFactoryParam<CharacterDetailsCubit, int, void>(
     (id, _) => CharacterDetailsCubit(sl(), id),
   );
+
+  // Auth: Firebase is created here only; the rest depends on abstractions.
+  sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+
+  sl.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSource(sl()),
+  );
+
+  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
+
+  sl.registerFactory<AuthCubit>(() => AuthCubit(sl()));
 }

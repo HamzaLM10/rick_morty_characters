@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rick_morty_characters/core/router/app_routes.dart';
+import 'package:rick_morty_characters/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:rick_morty_characters/core/widgets/empty_view.dart';
 import 'package:rick_morty_characters/core/widgets/error_view.dart';
 import 'package:rick_morty_characters/features/characters/presentation/bloc/characters_bloc.dart';
@@ -13,13 +14,14 @@ import 'package:rick_morty_characters/features/characters/presentation/widgets/c
 /// The home screen. Its Bloc is provided from outside (see app_router.dart).
 class CharactersPage extends StatelessWidget {
   const CharactersPage({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CharactersAppBar(
         onQueryChanged: (query) =>
             context.read<CharactersBloc>().add(SearchQueryChanged(query)),
+        onSignOut: () => context.read<AuthCubit>().signOut(),
       ),
       body: BlocBuilder<CharactersBloc, CharactersState>(
         builder: (context, state) => switch (state) {

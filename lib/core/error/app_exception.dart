@@ -32,3 +32,12 @@ final class NotFoundException extends AppException {
 final class UnknownException extends AppException {
   const UnknownException() : super('Something went wrong.');
 }
+
+final class InvalidCredentialsException extends AppException {
+  const InvalidCredentialsException() : super('Incorrect email or password.');
+}
+
+final class TooManyRequestsException extends AppException {
+  const TooManyRequestsException()
+    : super('Too many attempts. Please try again later.');
+}
